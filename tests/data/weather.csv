@@ -1,3 +1,8 @@
+   Sheffield
+Location 433900E 387200N, Lat 53.381 Lon -1.490, 131 metres amsl
+Estimated data is marked with a  after the value.
+Missing data (more than 2 days missing in month) is marked by  NaN.
+Sunshine data taken from an automatic Kipp & Zonen sensor marked with a #, otherwise sunshine data taken from a Campbell Stokes recorder.
    yyyy  mm   tmax    tmin      af    rain     sun
               degC    degC    days      mm   hours
    1883   1    6.3     1.7       6   122.1     NaN
@@ -1615,3 +1620,6 @@
    2017   5   17.9     9.0       0    53.2   180.1#  
    2017   6   20.3    12.6       0    89.0   155.2#  
    2017   7   21.2    12.6       0    78.2   152.2#  
+
+Data supplied by the Met Office
+British Crown copyright 2018, the Met Office
