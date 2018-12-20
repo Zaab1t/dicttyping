@@ -5,32 +5,27 @@ from hypothesis import given, assume
 from hypothesis.strategies import lists, integers, text, one_of, composite, \
     fixed_dictionaries
 
-from datatyping.datatyping import validate, customtype
+from datatyping.datatyping import validate
 
 
-# Custom type definitions
+# Custom checker definitions
 
-
-@customtype
 def positive_int(i):
     if i < 1:
         raise TypeError('%d is negative' % i)
 
 
-@customtype
 def title(s):
     if s != s.title():
         raise TypeError('%s is not a title' % s)
 
 
-@customtype
 def two_item_list(lst):
     if len(lst) != 2:
         raise TypeError('list contains %d items, not 2' % len(lst))
 
 
 # Tests
-
 
 @given(num=integers(min_value=1))
 def test_simple_pos_int(num):

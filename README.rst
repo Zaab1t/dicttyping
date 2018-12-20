@@ -8,7 +8,7 @@ datatyping
     :target: http://datatyping.readthedocs.io
 
 
-`datatyping` is a pure Python library with no dependencies that you can use to
+``datatyping`` is a pure Python library with no dependencies that you can use to
 verify whether elements in a data structure have the expected types. Great for
 incoming JSON.
 

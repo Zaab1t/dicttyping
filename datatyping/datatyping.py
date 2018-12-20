@@ -5,6 +5,7 @@ __license__ = "MIT"
 
 import collections.abc
 import reprlib
+import warnings
 
 
 # Open questions:
@@ -12,17 +13,34 @@ import reprlib
 #     should we handle collections.abc.MappingView?
 
 
-def _make_typeerror(structure, data):
-    error_msg = "%s is of type %s, expected type %s" % (
-        reprlib.repr(data),
-        data.__class__.__name__,
-        structure.__class__.__name__,
+def _make_typeerror(structure, actual_data):
+    if isinstance(structure, type):
+        classname = structure.__name__
+    else:
+        classname = structure.__class__.__name__
+
+    error_msg = '%s is of type %s, expected type %s' % (
+        reprlib.repr(actual_data),
+        actual_data.__class__.__name__,
+        classname
     )
     return TypeError(error_msg)
 
 
+def _make_valueerror(structure, actual_data):
+    error_msg = '%s has the wrong length. Expected %d, got %d.' % (
+        reprlib.repr(actual_data),
+        len(structure),
+        len(actual_data),
+    )
+    return ValueError(error_msg)
+
+
 def customtype(check_function):
     """Decorate a function, so it can be used for type checking.
+
+    Now deprecated, any function or callable can be used for type checking as long
+    as it raises the proper exceptions.
 
     Example
     -------
@@ -45,6 +63,7 @@ def customtype(check_function):
         Function that should be used to type check.
 
     """
+    warnings.warn('The @customtype decorator is no longer needed', DeprecationWarning)
     check_function.__datatyping_validate = True
     return check_function
 
@@ -66,6 +85,9 @@ def validate(structure, data, *, strict=True):
     ----------
     structure : type or collection of types
         The data structure that `data` should follow.
+        It can also be a function or callable that takes a value and raises exceptions
+        if the check fails. It is highly recommended to follow the exception conventions
+        for this library.
     data : anything
         The data you want type checked.
     strict : bool
@@ -84,36 +106,33 @@ def validate(structure, data, *, strict=True):
         has keys not in `structure`.
 
     """
-    if hasattr(structure, "__datatyping_validate"):
-        structure(data)
-    elif isinstance(structure, collections.abc.Sequence) and not isinstance(data, str):
+    if isinstance(structure, collections.abc.Sequence) and not isinstance(data, str):
         if not isinstance(data, type(structure)):
             raise _make_typeerror(structure, data)
-        if len(structure) == 1:
+
+        if len(structure) == 1:  # All items should be of the same type
             for item in data:
                 validate(structure[0], item, strict=strict)
-            return  # success
-        if len(structure) != len(data):
-            error_msg = ("%s has the wrong length. Expected %d, got %d.") % (
-                reprlib.repr(data),
-                len(structure),
-                len(data),
-            )
-            raise ValueError(error_msg)
-        for type_, item in zip(structure, data):
-            validate(type_, item, strict=strict)
+        elif len(structure) != len(data):
+            raise _make_valueerror(structure, data)
+        else:
+            for type_, item in zip(structure, data):
+                validate(type_, item, strict=strict)
     elif isinstance(structure, collections.abc.Mapping):
         if not isinstance(data, type(structure)):
             raise _make_typeerror(structure, data)
+
         if strict and len(structure) != len(data):
             raise KeyError(reprlib.repr(set(structure.keys()) ^ set(data.keys())))
         for key, type_ in structure.items():
             item = data[key]  # or KeyError :)
             validate(type_, item, strict=strict)
-    elif not isinstance(data, structure):  # structure is a type here
-        error_msg = "%s is of type %s, expected type %s" % (
-            reprlib.repr(data),
-            data.__class__.__name__,
-            structure.__name__,
+    elif isinstance(structure, type):
+        if not isinstance(data, structure):
+            raise _make_typeerror(structure, data)
+    elif callable(structure):
+        structure(data)
+    else:
+        raise TypeError(
+            'The given type mask %s is neither a structure nor a callable' % structure
         )
-        raise TypeError(error_msg)

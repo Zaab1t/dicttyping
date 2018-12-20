@@ -1,9 +1,9 @@
 datatyping
 ==========
 
-datatyping is a Python library, that can verify whether data is well-formed.
+``datatyping`` is a Python library that can verify whether data matches the expected type format.
 
-This makes datatyping useful for stuff that is currently hard in Python such
+This makes it useful for stuff that is currently hard in Python such
 as documenting incoming data or testing outgoing data.
 
 .. code-block:: python
@@ -14,13 +14,13 @@ as documenting incoming data or testing outgoing data.
     >>> datatyping.validate(structure, data)
 
 This approach ensures early failure in a specific spot if data is malformed or
-has changed format unexpectedly which results in a more explicit codebase that
+has changed format unexpectedly. This results in a more explicit codebase that
 is easier to maintain.
 
 For more, check out Jeff Knupp's `"How Python Makes Working With Data More
-Difficult in the Long Run" 
+Difficult in the Long Run"
 <https://jeffknupp.com/blog/2016/11/13/how-python-makes-working-with-data-more-difficult-in-the-long-run/>`_
-which inspired this library.
+which has inspired this library.
 
 Installation
 ------------

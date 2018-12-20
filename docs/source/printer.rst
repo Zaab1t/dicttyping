@@ -1,8 +1,8 @@
 Structure Generation
 ====================
 
-It can be tedious to type out a structure. Luckily `datatyping` comes with a
-useful submodule for that called `printer`.
+It may be tedious to type out a structure at times. For this purpose, ``datatyping`` comes
+with a useful submodule: ``printer``.
 
 .. code-block:: python
 
@@ -10,12 +10,12 @@ useful submodule for that called `printer`.
     >>> import requests
     >>> r = requests.get('http://httpbin.org/anything')
     >>> pprint(r.json())
-    {   
+    {
         'args': dict,
         'data': str,
         'files': dict,
         'form': dict,
-        'headers': {   
+        'headers': {
             'Accept': str,
             'Accept-Encoding': str,
             'Connection': str,

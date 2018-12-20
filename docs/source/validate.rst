@@ -1,7 +1,7 @@
 Getting Started
 ===============
 
-The bread and butter of `datatyping` is the `validate` function.
+The bread and butter of ``datatyping`` is the ``validate`` function.
 
 .. autofunction:: datatyping.validate
 
